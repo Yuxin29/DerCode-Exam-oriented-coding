@@ -1,0 +1,54 @@
+ou are currently at level 3
+You are running in REAL mode (Your grade will be counted)
+Your current grade is 75/100
+Assignments: 
+  Level 0: 
+    0: rotone for 25 potential points (Success)
+  Level 1: 
+    0: do_op for 50 potential points (Success)
+  Level 2: 
+    0: epur_str for 75 potential points (Success)
+  Level 3: 
+    0: rostring for 100 potential points (Failure)
+    1: rostring for 100 potential points (Current)
+
+Your current assignment is rostring for 100 potential points
+It is assignment 1 for level 3
+The subject is located at: ~/42/42 exam/Grademe-edu/subjects/subject.en.txt
+You must turn in your files in a subdirectory with the
+same name as the assignment (~/42/42 exam/Grademe-edu/rendu/rostring/).
+Here you don't need to use git.
+
+The end date for this exam is: 26/05/2025 22:06:57
+You have 0hrs, 43min and 39sec remaining
+
+=============================================================================
+You can work on your assignment. When you are sure you're done with it,
+use the "grademe" command to be graded, or "help" to get some help.
+examshell> 
+examshell> 
+examshell> grademe
+
+ ⚠️  Warning: This exercise is a contribution by pandalaf, it's still in beta testing.
+ If you want to add your contribution, visit the Github ReadME 👋
+ If you find any bug, please report it on the Github repository.
+
+Before continuing, please make ABSOLUTELY SURE that you are in the right directory,
+that you didn't forget anything, etc...
+If your assignment is wrong, you will have the same assignment
+
+ but with less potential points to earn !
+Are you sure? [y/N] y
+Ok, making grading request to server now.
+
+We will now wait for the job to complete.
+Please be patient, this CAN take several minutes...
+(10 seconds is fast, 30 seconds is expected, 3 minutes is a maximum)
+waiting...
+waiting...
+waiting...
+waiting...
+waiting...
+
+>>>>>>>>>> SUCCESS <<<<<<<<<<
+

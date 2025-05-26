@@ -1,0 +1,24 @@
+You are currently at level 3
+You are running in REAL mode (Your grade will be counted)
+Your current grade is 75/100
+Assignments:
+  Level 0:
+    0: rev_print for 25 potential points (Failure)
+    1: rev_print for 25 potential points (Success)
+  Level 1:
+    0: last_word for 50 potential points (Failure)
+    1: last_word for 50 potential points (Success)
+  Level 2:
+    0: tab_mult for 75 potential points (Success)
+  Level 3:
+    0: flood_fill for 25 potential points (Current)
+
+Your current assignment is flood_fill for 100 potential points
+It is assignment 0 for level 3
+The subject is located at: ~/42/42 exam/Grademe-edu/subjects/subject.en.txt
+You must turn in your files in a subdirectory with the
+same name as the assignment (~/42/42 exam/Grademe-edu/rendu/flood_fill/).
+Here you don't need to use git.
+
+The end date for this exam is: 25/05/2025 22:12:51
+You have 1hrs, 15min and 13sec remaining
