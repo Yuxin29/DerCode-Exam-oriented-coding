@@ -43,7 +43,7 @@ int	main(int argc, char **argv)
 		i++;
 	while (i >= 0)
 	{
-		while (!is_space(argv[1][i]))
+		while (!is_space(argv[1][i]) && i >= 0)
 			i--;
 		i++;
 		while (!is_space(argv[1][i+count]) && argv[1][i+count])
@@ -51,7 +51,7 @@ int	main(int argc, char **argv)
 			write(1, &argv[1][i + count], 1);
 			count++;
 		}
-		if (word_pt < word_nbr)
+		if (word_pt < word_nbr - 1)
 			write(1, " ", 1);
 		i--;
 		if (is_space(argv[1][i]))
