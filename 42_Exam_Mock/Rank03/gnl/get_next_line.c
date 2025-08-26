@@ -1,10 +1,8 @@
 /* ************************************************************************** */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <fcntl.h> 	//for open in main
-#include <stdio.h>	//for printf
+#include <stdio.h>	//for printf in main
 
 static size_t ft_strlen(char *s)
 {
@@ -58,6 +56,7 @@ static char *ft_strjoin(char *s1, char *s2)
         i++;
     }
     joined[len1 + len2] = '\0';
+    free (s1);
     return (joined);
 }
 
@@ -70,28 +69,26 @@ static char *extract_and_update(char **stash)
 	
 	i = 0;
 	j = 0;
-	if (!*stash || !(*stash)[0])
-		return (NULL);
 	while ((*stash)[i] && (*stash)[i] != '\n')
 		i++;
 	if ((*stash)[i] == '\n')
-        	i++; 
+		i++;
 	line = malloc(i + 1);
 	if (!line)
 		return (NULL);
-	while (j < i && (*stash)[j])
+	while (j < i)
 	{
 		line[j] = (*stash)[j];
 		j++;
 	}
 	line[j] = '\0';
-	if (!(*stash)[i]) // '\n' hapen to be the end of the stash
+	if (!(*stash)[i])
 	{
 		free(*stash);
 		*stash = NULL;
 		return (line);
 	}
-	new_stash = malloc(ft_strlen(*stash) - i);
+	new_stash = malloc(ft_strlen(*stash) - i + 1);
 	if (!new_stash)
 		return (NULL);
 	j = 0;
@@ -102,7 +99,7 @@ static char *extract_and_update(char **stash)
 		i++;
 	}
 	new_stash[j] = '\0';
-	free(*stash);
+	free (*stash);
 	*stash = new_stash;
 	return (line);
 }
@@ -110,50 +107,43 @@ static char *extract_and_update(char **stash)
 char	*get_next_line(int fd)
 {
 	static char	*stash;
-	char	buffer[BUFFER_SIZE + 1];
-	int	n;
-
+	char		buf[BUFFER_SIZE + 1];
+	int		n;
+	
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	n = 1;
 	while (!ft_strchr(stash, '\n') && n > 0)
 	{
-		n = read(fd, buffer, BUFFER_SIZE);
+		n = read(fd, buf, BUFFER_SIZE);
 		if (n < 0)
 		{
-			if (stash)
-				free(stash);
+			if (*stash)
+				free (stash);
 			stash = NULL;
 			return (NULL);
 		}
-		buffer[n] = '\0';
+		buf[n] = '\0';
 		if (n > 0)
-			stash = ft_strjoin(stash, buffer);
+			stash = ft_strjoin(stash, buf);
 	}
-	if (n == 0 && (!stash || !stash[0]))
+	if (n == 0)
 		return (NULL);
-	return (extract_and_update(&stash));
+	return(extract_and_update(&stash));
 }
 
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-    int     fd;
-    char    *line;
-
-    fd = open(argv[1], O_RDONLY);
-    if (fd < 0)
-    {
-        perror("open");
-        return (1);
-    }
-    printf("ft=0\n");
-    line = get_next_line(fd);
-    while (line != NULL) // fd = 0 = stdin
-    {
-        printf("%s", line);
-        free(line);
-        line = get_next_line(fd);
-    }
-    return (0);
+	int	fd;
+	char *line;
+	fd = open(argv[1], O_RDONLY);
+	line = get_next_line(fd);
+	while (line)
+	{
+		printf("%s", line);
+		free(line);
+		line = get_next_line(fd);
+	}
+	return (0); 
 }
