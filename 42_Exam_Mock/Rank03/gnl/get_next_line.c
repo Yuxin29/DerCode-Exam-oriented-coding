@@ -2,23 +2,25 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.g"
+#include "get_next_line.h"
+#include <fcntl.h> 	//for open in main
+#include <stdio.h>	//for printf
 
-static int ft_strlen(char *s)
+static size_t ft_strlen(char *s)
 {
-    int i;
+    size_t i;
 
     i = 0;
-    if (!*s)
+    if (!s)
         return (i);
     while (s[i])
         i++;
     return (i);
 }
 
-statich char *ft_strchr(char *s, char c)
+static char *ft_strchr(char *s, char c)
 {
-    if (!*s)
+    if (!s)
         return (NULL);
     while (*s)
     {
@@ -27,15 +29,15 @@ statich char *ft_strchr(char *s, char c)
         s++;
     }
     if (c == '\0')
-        return (*s);
+        return ((char *)s);
     return (NULL);
 }
 
 static char *ft_strjoin(char *s1, char *s2)
 {
-    int     len1;
-    int     len2;
-    int     i;
+    size_t     len1;
+    size_t     len2;
+    size_t     i;
     char    *joined;
     
     i = 0;
@@ -55,82 +57,84 @@ static char *ft_strjoin(char *s1, char *s2)
         joined[len1 + i] = s2[i];
         i++;
     }
-    joined[len1 + len2 + 1] = '\0';
+    joined[len1 + len2] = '\0';
     return (joined);
 }
 
 static char *extract_and_update(char **stash)
 {
-	int	    i;
-    int     j;
+	int	i;
+	int	j;
 	char	*line;
-	char	*newstash;
-
-    i = 0;
-    j = 0;
+	char	*new_stash;
+	
+	i = 0;
+	j = 0;
 	if (!*stash || !(*stash)[0])
 		return (NULL);
-
 	while ((*stash)[i] && (*stash)[i] != '\n')
 		i++;
 	if ((*stash)[i] == '\n')
-		i++;
-
+        	i++; 
 	line = malloc(i + 1);
 	if (!line)
 		return (NULL);
-	while (j < i)
+	while (j < i && (*stash)[j])
 	{
 		line[j] = (*stash)[j];
 		j++;
 	}
 	line[j] = '\0';
-
-	if (!(*stash)[i])
+	if (!(*stash)[i]) // '\n' hapen to be the end of the stash
 	{
 		free(*stash);
 		*stash = NULL;
 		return (line);
 	}
-	newstash = malloc(ft_strlen(*stash) - i + 1);
-	if (!newstash)
+	new_stash = malloc(ft_strlen(*stash) - i);
+	if (!new_stash)
 		return (NULL);
 	j = 0;
 	while ((*stash)[i])
-		newstash[j++] = (*stash)[i++];
-	newstash[j] = '\0';
-
+	{
+		new_stash[j] = (*stash)[i];
+		j++;
+		i++;
+	}
+	new_stash[j] = '\0';
 	free(*stash);
-	*stash = newstash;
+	*stash = new_stash;
 	return (line);
 }
 
 char	*get_next_line(int fd)
 {
-	char    *stash;
+	static char	*stash;
 	char	buffer[BUFFER_SIZE + 1];
-	int		bytes_read;
-	char	*line;
+	int	n;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	bytes_read = 1;
-	while (!ft_strchr(stash, '\n') && bytes_read > 0)
+	n = 1;
+	while (!ft_strchr(stash, '\n') && n > 0)
 	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read < 0)
+		n = read(fd, buffer, BUFFER_SIZE);
+		if (n < 0)
 		{
-			free(stash);
+			if (stash)
+				free(stash);
 			stash = NULL;
 			return (NULL);
 		}
-		buffer[bytes_read] = '\0';
-		if (bytes_read > 0)
+		buffer[n] = '\0';
+		if (n > 0)
 			stash = ft_strjoin(stash, buffer);
 	}
-	line = extract_and_update(&stash);
-	return (line);
+	if (n == 0 && (!stash || !stash[0]))
+		return (NULL);
+	return (extract_and_update(&stash));
 }
+
 
 int main(int argc, char **argv)
 {
@@ -144,10 +148,12 @@ int main(int argc, char **argv)
         return (1);
     }
     printf("ft=0\n");
-    while ((line = get_next_line(fd)) != NULL) // fd = 0 = stdin
+    line = get_next_line(fd);
+    while (line != NULL) // fd = 0 = stdin
     {
         printf("%s", line);
         free(line);
+        line = get_next_line(fd);
     }
     return (0);
 }
