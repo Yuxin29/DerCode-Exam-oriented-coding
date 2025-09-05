@@ -62,18 +62,16 @@ static char *ft_strjoin(char *s1, char *s2)
 
 static char *extract_and_update(char **stash)
 {
-	int	i;
-	int	j;
-	char	*line;
-	char	*new_stash;
+	int i = 0;
+	int	j = 0;
+	char *line;
+	char *new_stash;
 	
-	i = 0;
-	j = 0;
 	while ((*stash)[i] && (*stash)[i] != '\n')
 		i++;
 	if ((*stash)[i] == '\n')
 		i++;
-	line = malloc(i + 1);
+	line = malloc (i + 1);
 	if (!line)
 		return (NULL);
 	while (j < i)
@@ -88,38 +86,38 @@ static char *extract_and_update(char **stash)
 		*stash = NULL;
 		return (line);
 	}
-	new_stash = malloc(ft_strlen(*stash) - i + 1);
+	new_stash = malloc (ft_strlen(*stash) - i + 1);
 	if (!new_stash)
 		return (NULL);
 	j = 0;
 	while ((*stash)[i])
 	{
 		new_stash[j] = (*stash)[i];
-		j++;
 		i++;
+		j++;
 	}
 	new_stash[j] = '\0';
 	free (*stash);
-	*stash = new_stash;
+	(*stash) = new_stash;
 	return (line);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*stash;
+	static char *stash;
 	char		buf[BUFFER_SIZE + 1];
-	int		n;
-	
+	int	n;
+
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	n = 1;
-	while (!ft_strchr(stash, '\n') && n > 0)
+	while(!ft_strchr(stash, '\n') && n > 0)
 	{
 		n = read(fd, buf, BUFFER_SIZE);
 		if (n < 0)
 		{
-			if (*stash)
-				free (stash);
+			if (stash)
+				free(stash);
 			stash = NULL;
 			return (NULL);
 		}
@@ -129,14 +127,16 @@ char	*get_next_line(int fd)
 	}
 	if (n == 0)
 		return (NULL);
-	return(extract_and_update(&stash));
+	return (extract_and_update(&stash));
 }
-
 
 int	main(int argc, char **argv)
 {
 	int	fd;
-	char *line;
+	char	*line;
+	
+	if (argc != 2)
+		return (-1);
 	fd = open(argv[1], O_RDONLY);
 	line = get_next_line(fd);
 	while (line)
@@ -145,5 +145,5 @@ int	main(int argc, char **argv)
 		free(line);
 		line = get_next_line(fd);
 	}
-	return (0); 
+	return (0);
 }
